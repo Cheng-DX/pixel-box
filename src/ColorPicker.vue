@@ -11,7 +11,10 @@ const colors = [
   '#F90716',
   '#FF5403',
   '#FFCA03',
-  '#FFF323'
+  '#FFF323',
+  '#fff',
+  '#000',
+  ''
 ]
 </script>
 
@@ -23,10 +26,13 @@ const colors = [
         v-for="color in colors"
         @click="$emit('update:modelValue', color)"
         :style="{
-          backgroundColor: color
+          backgroundColor: color,
+          border: color === '' ? '1px dotted #ffffff66' : ''
         }"
         class="color-box"
-      ></div>
+      >
+        {{ color === '' ? '✏️' : '' }}
+      </div>
     </div>
   </div>
 </template>
@@ -51,10 +57,16 @@ const colors = [
   justify-content: center;
   align-items: center;
   margin-left: 5px;
+  max-width: 300px;
 }
 .color-box {
   height: 30px;
   width: 30px;
   margin: 3px;
+  color: rgba(255, 255, 255, 0.456);
+  font-size: 20px;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
 }
 </style>
