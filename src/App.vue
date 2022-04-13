@@ -1,9 +1,18 @@
 <script setup lang="ts">
+import { TO_DISPLAY_STRING } from '@vue/compiler-core'
 import { computed } from '@vue/reactivity'
 import { nextTick, ref, watch } from 'vue'
 import ColorPicker from './ColorPicker.vue'
 
 const modes = [
+  {
+    name: 'max',
+    size: 100
+  },
+  {
+    name: 'huge',
+    size: 40
+  },
   {
     name: 'large',
     size: 30
@@ -15,6 +24,10 @@ const modes = [
   {
     name: 'small',
     size: 10
+  },
+  {
+    name: 'tiny',
+    size: 5
   }
 ]
 const mode = ref('medium')
@@ -28,18 +41,11 @@ watch(mode, () => {
   )
 })
 function switchMode() {
-  switch (mode.value) {
-    case 'large':
-      mode.value = 'medium'
-      break
-    case 'medium':
-      mode.value = 'small'
-      break
-    case 'small':
-      mode.value = 'large'
-      break
-    default:
-      mode.value = 'large'
+  const currentMode = modes.find(m => m.name === mode.value)
+  if (currentMode) {
+    const index = modes.indexOf(currentMode)
+    const nextIndex = (index + 1) % modes.length
+    mode.value = modes[nextIndex].name
   }
 }
 const color = ref('')
@@ -49,8 +55,13 @@ const pixels = ref(
     Array.from({ length: size.value }, () => '')
   )
 )
-function clickBox(idx1: number, idx2: number) {
-  pixels.value[idx1][idx2] = color.value
+function clickBox(e: any) {
+  const target = e.target as HTMLDivElement
+  const row = Number(target.getAttribute('data-row'))
+  const col = Number(target.getAttribute('data-col'))
+  if (row && col) {
+    pixels.value[row][col] = color.value
+  }
 }
 function exportJSON() {
   const result = []
@@ -120,16 +131,19 @@ function _clear() {
       </div>
     </div>
 
-    <div v-for="(row, idx1) in pixels" class="row">
-      <div
-        @click="clickBox(idx1, idx2)"
-        v-for="(item, idx2) in row"
-        class="pixel"
-        :style="{
-          backgroundColor: item
-        }"
-        :key="`${idx1}-${idx2}`"
-      ></div>
+    <div @click="clickBox">
+      <div v-for="(row, idx1) in pixels" class="row">
+        <div
+          v-for="(item, idx2) in row"
+          class="pixel"
+          :style="{
+            backgroundColor: item
+          }"
+          :data-row="idx1"
+          :data-col="idx2"
+          :key="`${idx1}-${idx2}`"
+        ></div>
+      </div>
     </div>
   </div>
 </template>
@@ -139,6 +153,7 @@ function _clear() {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 670px;
 }
 .tools {
   display: flex;
