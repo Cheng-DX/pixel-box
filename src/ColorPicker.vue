@@ -5,6 +5,11 @@ defineProps<{
   modelValue: string
 }>()
 defineEmits(['update:modelValue'])
+colors.sort((a, b) => {
+  a = a.split('#')[1]
+  b = b.split('#')[1]
+  return parseInt(a, 16) - parseInt(b, 16)
+})
 </script>
 
 <template>
