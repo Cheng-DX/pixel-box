@@ -6,8 +6,8 @@ import ColorPicker from './ColorPicker.vue'
 
 const modes = [
   {
-    name: 'max',
-    size: 100
+    name: '50❌50',
+    size: 50
   },
   {
     name: 'huge',
@@ -59,7 +59,7 @@ function clickBox(e: any) {
   const target = e.target as HTMLDivElement
   const row = Number(target.getAttribute('data-row'))
   const col = Number(target.getAttribute('data-col'))
-  if (row && col) {
+  if (row !== undefined && col !== undefined) {
     pixels.value[row][col] = color.value
   }
 }

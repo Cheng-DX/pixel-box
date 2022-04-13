@@ -1,37 +1,28 @@
 <script setup lang="ts">
+import colors from './assets/colors.json'
+
 defineProps<{
   modelValue: string
 }>()
 defineEmits(['update:modelValue'])
-const colors = [
-  '#006778',
-  '#0093AB',
-  '#00AFC1',
-  '#FFD124',
-  '#F90716',
-  '#FF5403',
-  '#FFCA03',
-  '#FFF323',
-  '#fff',
-  '#000',
-  ''
-]
 </script>
 
 <template>
   <div class="color-picker-root">
-    <div class="box"></div>
+    <div class="current-color">
+      <div class="box"></div>
+      <span class="color-text">{{ modelValue }}</span>
+    </div>
     <div class="select-panel">
       <div
         v-for="color in colors"
         @click="$emit('update:modelValue', color)"
         :style="{
-          backgroundColor: color,
-          border: color === '' ? '1px dotted #ffffff66' : ''
+          backgroundColor: color
         }"
         class="color-box"
       >
-        {{ color === '' ? '✏️' : '' }}
+        {{ color === '' ? '❌' : '' }}
       </div>
     </div>
   </div>
@@ -43,30 +34,46 @@ const colors = [
   flex-direction: row;
   height: 100px;
 }
+.current-color {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 .box {
-  height: 70px;
-  width: 70px;
+  height: 60px;
+  width: 60px;
   background-color: v-bind(modelValue);
   border: 1px solid #ffffff1f;
-  margin-block: auto;
+  border-radius: 20px;
+  transition: 0.2s;
+}
+.color-text {
+  color: v-bind(modelValue);
+  font-family: consolas;
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 2px;
 }
 .select-panel {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  align-content: center;
   margin-left: 5px;
-  max-width: 300px;
+  max-width: 360px;
 }
 .color-box {
-  height: 30px;
-  width: 30px;
-  margin: 3px;
-  color: rgba(255, 255, 255, 0.456);
-  font-size: 20px;
+  height: 20px;
+  width: 20px;
+  margin: 1px;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 10px;
   text-align: center;
-  line-height: 30px;
+  line-height: 20px;
   cursor: pointer;
 }
 </style>
